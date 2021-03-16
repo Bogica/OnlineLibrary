@@ -73,8 +73,8 @@ public class UserController {
      *  5)update user
      */
     @PutMapping("/users")
-    public User updateUser(@RequestBody UserDto user){
-        return service.updateUser(user);
+    public void updateUser(@RequestBody UserDto userDTo){
+        service.updateUser(userDTo);
     }
 
     /**

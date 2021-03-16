@@ -8,6 +8,8 @@ import com.example.library.exception.UserNotFoundException;
 import com.example.library.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,21 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for the online library project
+ * Acceptance criterias:
+ * 1)add new book
+ * 2)add multiple books
+ * 3)get books by id
+ * 4)get all books
+ * 5)update book
+ * 6)delete book
+ */
 @RestController
-@Api(value = "Book Controller", description = "Books REST Endpoints.")
+@Api(tags = {"Book controller"})
+@SwaggerDefinition(tags = {
+        @Tag(name = "Book controller", description = "Book REST Endpoints.")
+})
 public class BookController {
 
 
@@ -28,7 +43,7 @@ public class BookController {
 
 
     /**
-     * AC:  1)add a book
+     * 1)add new book
      * This add new book with new Identifier.
      *
      * @param bookDto
@@ -43,7 +58,7 @@ public class BookController {
 
 
     /**
-     * AC:  2)add multiple books
+     * 2)add multiple books
      * This add multiple new boopropertyPath=title,ks with new Identifier.
      *
      * @param bookDto
@@ -56,7 +71,7 @@ public class BookController {
     }
 
     /**
-     * AC: 3)get books by id
+     * 3)get books by id
      *
      * @param id
      * @return bookDto
@@ -68,7 +83,7 @@ public class BookController {
     }
 
     /**
-     * AC: 4)get all books
+     * 4)get all books
      *
      * @return List<bookDto>
      */
@@ -80,7 +95,7 @@ public class BookController {
 
 
     /**
-     * AC: 5)update book
+     * 5)update book
      */
     @ApiOperation(value = "Update Book")
     @PutMapping("/updateBook")
@@ -90,7 +105,7 @@ public class BookController {
     }
 
     /**
-     * AC: 6)delete book
+     * 6)delete book
      * @param id
      */
     @ApiOperation(value = "Delete Book By Id")
@@ -98,5 +113,27 @@ public class BookController {
     public void deleteBook(@PathVariable Long id){
          bookService.deleteBook(id);
     }
+
+
+    /**
+     * 7)get books by category
+     *
+     * @param category EG: NEW, STANDARD, CLASSIC. Check the category enum
+     * @return
+     */
+    /*
+    @ApiOperation(value = "Get Book by Category")
+    @GetMapping("/booksCategory}")
+    public List<BookDto> getBookByCategory(@RequestParam Category category) {
+        return rentService.getBookByCategory(category);
+    }
+
+
+    @GetMapping("/bookByCategory/{categoryName}")
+    public List<BookDto> bookByCategory(@PathVariable String categoryName) {
+        return rentService.getBookByCategory(categoryName);
+    }
+
+*/
 
 }

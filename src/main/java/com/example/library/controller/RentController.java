@@ -13,7 +13,10 @@ import com.example.library.repository.BookRepository;
 import com.example.library.repository.RentRepository;
 import com.example.library.repository.UserRepository;
 import com.example.library.service.RentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +27,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+/**
+ * Controller for the online library project
+ * Acceptance criterias:
+ * 1)add new rent
+ * 2)add multiple rents
+ * 3)get all rents
+ * 4)return book (rent ended)
+ * 5)find rent by userId
+ * 6)Rent alert
+ */
 @RestController
+@Api(tags = {"Rent controller"})
+@SwaggerDefinition(tags = {
+        @Tag(name = "Rent controller", description = "Rent REST Endpoints.")
+})
 public class RentController {
 
     @Autowired
     RentService rentService;;
 
     /**
-     * AC:  1)add a rent
+     * 1)add new rent
      * This add a new rent
      *
-     * @param rentDto
+     * @param rentDto, UserId
      */
     @ApiOperation(value = "Add New Rent")
-    @PostMapping("/addNewRent")
+    @PostMapping("/addNewRent/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addNewRent(@RequestBody RentDto rentDto){
-        rentService.addNewRent(rentDto);
+    public void addNewRent(@RequestBody RentDto rentDto, @PathVariable Long userId){
+        rentService.addNewRent(rentDto, userId);
     }
 
     /**
-     * AC:  2)add multiple rents
+     * 2)add multiple rents
      * This add a new rent
      *
      * @param rentDto, userId
@@ -52,34 +69,13 @@ public class RentController {
     @ApiOperation(value = "Add Multiple Rents")
     @PostMapping("/addMultipleRent/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-
     public void addMultipleRent(@RequestBody List<RentDto> rentDto, @PathVariable Long userId){
         rentService.addMultipleRents(rentDto, userId);
     }
 
-    /**
-     * AC:8 Get Books by category
-     *
-     * @param category EG: NEW, STANDARD, CLASSIC. Check the category enum
-     * @return
-     */
-    /*
-    @ApiOperation(value = "Get Book by Category")
-    @GetMapping("/booksCategory}")
-    public List<BookDto> getBookByCategory(@RequestParam Category category) {
-        return rentService.getBookByCategory(category);
-    }
-
-
-    @GetMapping("/bookByCategory/{categoryName}")
-    public List<BookDto> bookByCategory(@PathVariable String categoryName) {
-        return rentService.getBookByCategory(categoryName);
-    }
-
-*/
 
     /**
-     * AC: 4)get all rents
+     * 3)get all rents
      *
      * @return List<RentDto>
      */
@@ -90,7 +86,7 @@ public class RentController {
     }
 
     /**
-     * AC: 5)return book
+     * 4)return book (rent ended)
      *
      * @param rentId
      */
@@ -101,7 +97,7 @@ public class RentController {
     }
 
     /**
-     * AC: 5)find by userId
+     * 5)find rent by userId
      *
      * @param userId
      */
@@ -111,20 +107,9 @@ public class RentController {
         return rentService.findByUserId(userId);
     }
 
-    /**
-     * AC: 5)Rent alert
-     *
-     * @param userId
-     */
-    @ApiOperation(value = "Did rent passed 30 days")
-    @GetMapping("/rentAlert/{userId}")
-    public List<Rent> rentAlert(@PathVariable Long userId){
-        return rentService.rentAlert(userId);
-    }
-
 
     /**
-     * AC: 6)update rent
+     * 7)update rent
      */
     /*
     @ApiOperation(value = "Update rent")
@@ -135,7 +120,7 @@ public class RentController {
     }
 
     /**
-     * AC: 7)delete rent
+     * 8)delete rent
      * @param id
      */
     /*

@@ -35,7 +35,7 @@ public class BookService {
 
     /**
      * Add new book into database
-     * Save the book In Book Entity
+     *
      * @param bookDto
      */
     public void addNewBook(BookDto bookDto){
@@ -121,6 +121,27 @@ public class BookService {
 
         bookRepository.deleteById(id);
     }
+
+
+    /**
+     * Get the list of books according to category
+     *
+     * @param category
+     * @return
+     */
+    /*
+    public List<BookDto> getBookByCategory(Category category) {
+        LOGGER.info("Fetch all the books by category");
+        List<Book> book = bookRepository.findAllBookByCategory(category);
+        return mapBookListToBooDtoList(book);
+    }
+
+    public List<BookDto> getBookByCategory(String categoryName) {
+        LOGGER.info("Fetch all the books by category");
+        List<Book> book = bookRepository.findAllBookByCategoryName(categoryName);
+        return mapBookListToBooDtoList(book);
+    }
+*/
 
     //Convert List of books to List of bookDto
     private List<BookDto> mapBookListToBooDtoList(List<Book> books) {

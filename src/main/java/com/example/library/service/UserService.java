@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     final ModelMapper modelMapper = new ModelMapper();
 
@@ -31,7 +31,7 @@ public class UserService {
 
 
     /**
-     * List all the users
+     * List all users
      *
      * @return List<UserDto>
      */
@@ -48,7 +48,7 @@ public class UserService {
      */
     public UserDto findUserById(long id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " is not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " is not found."));
 
         LOGGER.info("User with id: " + id + " exists.");
 
@@ -57,7 +57,7 @@ public class UserService {
 
     /**
      * Add new user into database
-     * Save the book In Book Entity
+     *
      * @param userDto
      */
     public void saveUser(UserDto userDto){
@@ -90,13 +90,21 @@ public class UserService {
         return "User is deleted!";
     }
 
-    public User updateUser(UserDto user){
-        User existingUser = userRepository.findById(user.getId()).orElse(null);
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
+    /**
+     * Update user
+     *
+     * @param userDto
+     */
+    public void updateUser(UserDto userDto){
+        User user = modelMapper.map(userDto, User.class);
 
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("User doesn't exist."));
 
-        return userRepository.save(existingUser);
+        existingUser.setFirstName(userDto.getFirstName());
+        existingUser.setLastName(userDto.getLastName());
+
+        userRepository.save(existingUser);
     }
 
     //Convert List of users to List of userDto

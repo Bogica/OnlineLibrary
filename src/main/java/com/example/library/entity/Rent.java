@@ -3,6 +3,7 @@ package com.example.library.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -26,12 +27,12 @@ public class Rent {
     /**
      * date and time when rent started
      */
-    private LocalDateTime rentStart;
+    private LocalDate rentStart;
 
     /**
      * date and time when rent ended
      */
-    private LocalDateTime rentEnd;
+    private LocalDate rentEnd;
 
 
     /**
