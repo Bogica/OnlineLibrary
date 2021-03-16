@@ -1,6 +1,8 @@
 package com.example.library.service;
 
+import com.example.library.constants.Category;
 import com.example.library.controller.RentController;
+import com.example.library.dto.BookDto;
 import com.example.library.dto.RentDto;
 import com.example.library.entity.Book;
 import com.example.library.entity.Rent;
@@ -11,11 +13,13 @@ import com.example.library.exception.UserNotFoundException;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.RentRepository;
 import com.example.library.repository.UserRepository;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -51,7 +55,6 @@ public class RentService {
      *
      * @param rentDto
      */
-
     @Transactional
     public void addNewRent(@RequestBody RentDto rentDto){
         User user = userRepository.findById(rentDto.getUserId())
@@ -61,26 +64,23 @@ public class RentService {
 
         int bookTotalCount = book.getTotalCount() - 1;
         if (bookTotalCount == 0 ) {
-            try {
-                throw new BadRequestException("All books are rented.");
-            } catch (BadRequestException e) {
-                e.printStackTrace();
-            }
+            throw new BookNotFoundException("All books are rented");
         }
 
         int rented = book.getRented();
         book.setRented(rented + 1);
 
         book.setTotalCount(bookTotalCount);
-        int categoryCounter = 0;
-
-        if(book.getCategory().equals("NEW")){
-            categoryCounter++;
-        }else if (categoryCounter == 2){
-            throw new BookNotFoundException("You van have only 2 books with NEW category");
-        }
 
         bookRepository.save(book);
+
+        int categoryCount = 0;
+
+        if(book.getCategory() == Category.NEW){
+            categoryCount++;
+        }else if (categoryCount == 2){
+            throw new BookNotFoundException("You can't borrow more then 2 NEW category books");
+        }
 
         int borrowedBooksCount = user.getBorrowedBooksCount() + 1;
         LOGGER.info("Setting bookTotalCount less by 1 and setting borrowedBooksCount to increase by 1.");
@@ -103,52 +103,78 @@ public class RentService {
     /**
      * Add list of rents to database
      *
-     * @param rentDto
+     * @param rentDtoList, userId
      */
 
     public void addMultipleRents(List<RentDto> rentDtoList, long userId){
-
-        List<Rent> rentList = Arrays.asList(modelMapper.map(rentDtoList, Rent.class));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id: " + userId + "doesn't exist"));
-        List<Rent> rentByUser = rentRepository.findByUser(user);
+                .orElseThrow(()-> new UserNotFoundException("User with id: " + userId + " is not found"));
 
-        List<Rent> rent = new ArrayList<>();
+        List<Rent> tmpList = new ArrayList<>();
 
-        for(Rent r  : rentList){
-            r.setRentStart(LocalDateTime.now());
-            r.setUser(user);
-            rent.add(r);
-        }
-        rentRepository.saveAll(rent);
+        int rentCounter = 0;
+        int categoryCount = 0;
+        for(RentDto dto : rentDtoList) {
+            Book book = bookRepository.findById(dto.getBookId())
+                    .orElseThrow(() -> new BookNotFoundException("Book with id: " + dto.getBookId() + " is not found."));
 
-        /*
-        int bookTotalCount = book.getTotalCount() - 1;
-        if (bookTotalCount == 0 ) {
-            try {
-                throw new BadRequestException("All books are rented.");
-            } catch (BadRequestException e) {
-                e.printStackTrace();
+            Rent newRent =  new Rent();
+
+            newRent.setBook(book);
+            newRent.setUser(user);
+            newRent.setRentStart(LocalDateTime.now());
+
+            tmpList.add(newRent);
+            rentCounter++;
+
+            if(rentCounter == 5){
+                throw new BookNotFoundException("You can only rent 5 books at time.");
             }
+
+            if(book.getCategory() == Category.NEW){
+                categoryCount++;
+            }else if (categoryCount == 2){
+                throw new BookNotFoundException("You can't borrow more then 2 NEW category books");
+            }
+
+
         }
 
-        int rented = book.getRented();
-        book.setRented(rented + 1);
-
-        book.setTotalCount(bookTotalCount);
-        bookRepository.save(book);
-
-        int borrowedBooksCount = user.getBorrowedBooksCount() + 1;
-        LOGGER.info("Setting bookTotalCount less by 1 and setting borrowedBooksCount to increase by 1.");
-
-        if(borrowedBooksCount >= MAX_BOOKS_PER_USER){
-            throw new BookNotFoundException("You have reached your limit to borrow books. Return a book and then you can borrow again");
-        }
-        user.setBorrowedBooksCount(borrowedBooksCount);
-        userRepository.save(user);
-        */
+        rentRepository.saveAll(tmpList);
 
     }
+
+    /**
+     * Get the list of books according to category
+     *
+     * @param category
+     * @return
+     */
+    /*
+    public List<BookDto> getBookByCategory(Category category) {
+        LOGGER.info("Fetch all the books by category");
+        List<Book> book = bookRepository.findAllBookByCategory(category);
+        return mapBookListToBooDtoList(book);
+    }
+
+
+
+    //Convert List of books to List of bookDto
+    private List<BookDto> mapBookListToBooDtoList(List<Book> books) {
+        return books.stream()
+                .map(book -> modelMapper.map(book, BookDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<BookDto> getBookByCategory(String categoryName) {
+        LOGGER.info("Fetch all the books by category");
+        List<Book> book = bookRepository.findAllBookByCategoryName(categoryName);
+        return mapBookListToBooDtoList(book);
+    }
+*/
+
+
+
 
     /**
      * Get rent by userId

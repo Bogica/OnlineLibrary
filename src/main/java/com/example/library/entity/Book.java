@@ -17,7 +17,7 @@ public class Book {
 
 
     /**
-     * Unique Book Number given by company.
+     * unique book number, auto generated
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,13 +46,13 @@ public class Book {
     private Category category;
 
     /**
-     * Amount of book available
+     * amount of book available
      */
     @Min(value = 0, message = "All books are rented.")
     private Integer totalCount;
 
     /**
-     * Total copies of book rented
+     * total copies of book rented
      */
     @Min(value = 0, message = "Total rent should be positive value.")
     private Integer rented;

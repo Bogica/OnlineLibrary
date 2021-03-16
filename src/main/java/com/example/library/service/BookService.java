@@ -82,17 +82,9 @@ public class BookService {
      *
      * @return List<BookDto>
      */
-
     public List<BookDto> allBooks(){
         List<Book> books = bookRepository.findAll();
         return mapBookListToBooDtoList(books);
-    }
-
-    //Convert List of books to List of bookDto
-    private List<BookDto> mapBookListToBooDtoList(List<Book> books) {
-        return books.stream()
-                .map(book -> modelMapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
     }
 
     /**
@@ -128,6 +120,13 @@ public class BookService {
         LOGGER.info("Book with id: " + id + " exists.");
 
         bookRepository.deleteById(id);
+    }
+
+    //Convert List of books to List of bookDto
+    private List<BookDto> mapBookListToBooDtoList(List<Book> books) {
+        return books.stream()
+                .map(book -> modelMapper.map(book, BookDto.class))
+                .collect(Collectors.toList());
     }
 
 }

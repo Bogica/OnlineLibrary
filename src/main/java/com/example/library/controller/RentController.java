@@ -1,5 +1,6 @@
 package com.example.library.controller;
 
+import com.example.library.constants.Category;
 import com.example.library.dto.BookDto;
 import com.example.library.exception.BadRequestException;
 import com.example.library.exception.BookNotFoundException;
@@ -20,9 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -51,7 +49,6 @@ public class RentController {
      *
      * @param rentDto, userId
      */
-
     @ApiOperation(value = "Add Multiple Rents")
     @PostMapping("/addMultipleRent/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -60,6 +57,26 @@ public class RentController {
         rentService.addMultipleRents(rentDto, userId);
     }
 
+    /**
+     * AC:8 Get Books by category
+     *
+     * @param category EG: NEW, STANDARD, CLASSIC. Check the category enum
+     * @return
+     */
+    /*
+    @ApiOperation(value = "Get Book by Category")
+    @GetMapping("/booksCategory}")
+    public List<BookDto> getBookByCategory(@RequestParam Category category) {
+        return rentService.getBookByCategory(category);
+    }
+
+
+    @GetMapping("/bookByCategory/{categoryName}")
+    public List<BookDto> bookByCategory(@PathVariable String categoryName) {
+        return rentService.getBookByCategory(categoryName);
+    }
+
+*/
 
     /**
      * AC: 4)get all rents

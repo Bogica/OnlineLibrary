@@ -16,12 +16,26 @@ import java.util.Set;
 public class User {
 
 
+    /**
+     * unique user number, auto generated
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * first name of user
+     */
     private String firstName;
+
+    /**
+     * last name of user
+     */
     private String lastName;
+
+    /**
+     * books rented by user
+     */
     private Integer borrowedBooksCount;
 
 }

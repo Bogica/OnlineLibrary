@@ -14,7 +14,7 @@ import javax.validation.constraints.Min;
 public class BookDto {
 
     /**
-     * Unique Book Number given by company.
+     * unique book Number
      */
     @ApiModelProperty(value="Book Unique Id")
     @Id
@@ -48,7 +48,7 @@ public class BookDto {
 
 
     /**
-     * Amount of book available
+     * amount of book available
      */
     @ApiModelProperty(value="Copies of book available on the library")
     @Min(value = 0, message = "Total totalCount should be positive value.")
