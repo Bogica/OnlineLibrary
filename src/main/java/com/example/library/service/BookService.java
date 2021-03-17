@@ -119,7 +119,7 @@ public class BookService {
      * Get the list of books according to category
      *
      * @param category
-     * @return
+     * @return List<BookDto>
      */
     public List<BookDto> getBookByCategory(Category category) {
         LOGGER.info("Fetch all the books by category");

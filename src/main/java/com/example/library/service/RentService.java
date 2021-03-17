@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -118,11 +117,11 @@ public class RentService {
 
     /**
      * Get rent by userId
-     * <p>
+     *
      * Check if date of return is overdue
      *
      * @param userId
-     * @return rentdto
+     * @return rentDto
      */
     public List<RentDto> findByUserId(long userId) {
         User user = userRepository.findById(userId)
@@ -157,7 +156,7 @@ public class RentService {
     /**
      * Return book
      *
-     * @param id
+     * @param id, rentDto
      */
     @Transactional
     public void returnBook(long id, RentDto rentDto) {
