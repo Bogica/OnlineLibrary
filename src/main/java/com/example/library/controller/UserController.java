@@ -1,7 +1,6 @@
 package com.example.library.controller;
 
 import com.example.library.dto.UserDto;
-import com.example.library.entity.User;
 import com.example.library.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.SwaggerDefinition;
@@ -33,55 +32,54 @@ public class UserController {
     UserService service;
 
     /**
-     *  1)get all users
+     * 1)get all users
      * This add a new rent
-     *
      */
     @GetMapping("/users")
-    public List<UserDto> allUsers(){
+    public List<UserDto> allUsers() {
         return service.allUsers();
     }
 
     /**
-     *  2)get user by Id
+     * 2)get user by Id
      *
      * @param id
      */
     @GetMapping("/userById/{id}")
-    public UserDto getUserById(@PathVariable Integer id){
+    public UserDto getUserById(@PathVariable Integer id) {
         return service.findUserById(id);
     }
 
 
     /**
-     *  3)add user
+     * 3)add user
      */
     @PostMapping("/users")
-    public void addUser(@RequestBody UserDto user){
+    public void addUser(@RequestBody UserDto user) {
         service.saveUser(user);
     }
 
     /**
-     *  4)add multiple users
+     * 4)add multiple users
      */
     @PostMapping("/addMultipleUsers")
-    public void addAllUsers(@RequestBody List<UserDto> users){
+    public void addAllUsers(@RequestBody List<UserDto> users) {
         service.saveAllUsers(users);
     }
 
     /**
-     *  5)update user
+     * 5)update user
      */
     @PutMapping("/users")
-    public void updateUser(@RequestBody UserDto userDTo){
+    public void updateUser(@RequestBody UserDto userDTo) {
         service.updateUser(userDTo);
     }
 
     /**
-     *  6)delete user
+     * 6)delete user
      */
     @DeleteMapping("/deleteUsers/{id}")
-    public String delete(@PathVariable Integer id){
+    public String delete(@PathVariable Integer id) {
         return service.deleteUser(id);
     }
 }

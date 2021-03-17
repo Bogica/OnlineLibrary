@@ -34,7 +34,6 @@ public class Rent {
      */
     private LocalDate rentEnd;
 
-
     /**
      * object book, rented book
      */
@@ -48,5 +47,7 @@ public class Rent {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    private boolean isOverdue;
 
 }

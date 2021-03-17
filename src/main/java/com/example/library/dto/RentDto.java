@@ -1,9 +1,8 @@
 package com.example.library.dto;
 
 import lombok.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -43,13 +42,18 @@ public class RentDto {
     private String bookTitle;
 
     /**
-     * date and time when rent started
+     * date when rent started
      */
     private LocalDate rentStart;
 
     /**
-     * object book, rented book
+     * date when rent ended
      */
     private LocalDate RentEnd;
+
+    /**
+     * overdue date
+     */
+    private boolean isOverdue;
 
 }

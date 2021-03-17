@@ -1,10 +1,7 @@
 package com.example.library.service;
 
-import com.example.library.dto.BookDto;
 import com.example.library.dto.UserDto;
-import com.example.library.entity.Book;
 import com.example.library.entity.User;
-import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.DuplicateResourceException;
 import com.example.library.exception.UserNotFoundException;
 import com.example.library.repository.UserRepository;
@@ -13,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +19,18 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-
     final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     UserRepository userRepository;
-
 
     /**
      * List all users
      *
      * @return List<UserDto>
      */
-    public List<UserDto> allUsers(){
-        List<User> allUsers= userRepository.findAll();
+    public List<UserDto> allUsers() {
+        List<User> allUsers = userRepository.findAll();
         return mapUsersListToUsersDtoList(allUsers);
     }
 
@@ -46,7 +40,7 @@ public class UserService {
      * @param id
      * @return userDto
      */
-    public UserDto findUserById(long id){
+    public UserDto findUserById(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " is not found."));
 
@@ -60,10 +54,10 @@ public class UserService {
      *
      * @param userDto
      */
-    public void saveUser(UserDto userDto){
+    public void saveUser(UserDto userDto) {
         Optional<User> userId = userRepository.findById(userDto.getId());
-        if(userId.isPresent()){
-            throw new DuplicateResourceException("User with this ID already exists");
+        if (userId.isPresent()) {
+            throw new DuplicateResourceException("User with id: " + userDto.getId() + " already exists.");
         }
 
         User user = modelMapper.map(userDto, User.class);
@@ -75,7 +69,7 @@ public class UserService {
      *
      * @param userDto
      */
-    public void saveAllUsers(List<UserDto> userDto){
+    public void saveAllUsers(List<UserDto> userDto) {
         List<User> userList = Arrays.asList(modelMapper.map(userDto, User.class));
         userRepository.saveAll(userList);
     }
@@ -85,7 +79,7 @@ public class UserService {
      *
      * @param id
      */
-    public String deleteUser(long id){
+    public String deleteUser(long id) {
         userRepository.deleteById(id);
         return "User is deleted!";
     }
@@ -95,11 +89,11 @@ public class UserService {
      *
      * @param userDto
      */
-    public void updateUser(UserDto userDto){
+    public void updateUser(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
 
         User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserNotFoundException("User doesn't exist."));
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + user.getId() + " doesn't exists."));
 
         existingUser.setFirstName(userDto.getFirstName());
         existingUser.setLastName(userDto.getLastName());
@@ -113,6 +107,4 @@ public class UserService {
                 .map(user -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
     }
-
-
 }

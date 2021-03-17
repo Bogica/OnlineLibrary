@@ -1,10 +1,7 @@
 package com.example.library.controller;
 
-
+import com.example.library.constants.Category;
 import com.example.library.dto.BookDto;
-import com.example.library.entity.Book;
-import com.example.library.exception.DuplicateResourceException;
-import com.example.library.exception.UserNotFoundException;
 import com.example.library.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,13 +9,11 @@ import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller for the online library project
@@ -29,6 +24,7 @@ import java.util.Optional;
  * 4)get all books
  * 5)update book
  * 6)delete book
+ * 7)get book by category
  */
 @RestController
 @Api(tags = {"Book controller"})
@@ -37,10 +33,8 @@ import java.util.Optional;
 })
 public class BookController {
 
-
     @Autowired
     private BookService bookService;
-
 
     /**
      * 1)add new book
@@ -56,7 +50,6 @@ public class BookController {
         bookService.addNewBook(bookDto);
     }
 
-
     /**
      * 2)add multiple books
      * This add multiple new boopropertyPath=title,ks with new Identifier.
@@ -66,7 +59,7 @@ public class BookController {
     @ApiOperation(value = "Add Multiple New Books")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/addMultipleBooks")
-    public void addAllBooks(@RequestBody List<BookDto> bookDto){
+    public void addAllBooks(@RequestBody List<BookDto> bookDto) {
         bookService.addAllBooks(bookDto);
     }
 
@@ -78,7 +71,7 @@ public class BookController {
      */
     @ApiOperation(value = "Get Book By Id")
     @GetMapping("/booksById/{id}")
-    public BookDto findBookById(@PathVariable Long id){
+    public BookDto findBookById(@PathVariable Long id) {
         return bookService.findBookById(id);
     }
 
@@ -89,10 +82,9 @@ public class BookController {
      */
     @ApiOperation(value = "Get All Books")
     @GetMapping("/allBooks")
-    public List<BookDto> findAllBooks(){
+    public List<BookDto> findAllBooks() {
         return bookService.allBooks();
     }
-
 
     /**
      * 5)update book
@@ -100,20 +92,20 @@ public class BookController {
     @ApiOperation(value = "Update Book")
     @PutMapping("/updateBook")
     @ResponseStatus(HttpStatus.OK)
-    public void updateBook(@Valid @RequestBody BookDto bookDto){
-         bookService.updateBook(bookDto);
+    public void updateBook(@Valid @RequestBody BookDto bookDto) {
+        bookService.updateBook(bookDto);
     }
 
     /**
      * 6)delete book
+     *
      * @param id
      */
     @ApiOperation(value = "Delete Book By Id")
     @DeleteMapping("/deleteBookById/{id}")
-    public void deleteBook(@PathVariable Long id){
-         bookService.deleteBook(id);
+    public void deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
     }
-
 
     /**
      * 7)get books by category
@@ -121,19 +113,10 @@ public class BookController {
      * @param category EG: NEW, STANDARD, CLASSIC. Check the category enum
      * @return
      */
-    /*
     @ApiOperation(value = "Get Book by Category")
-    @GetMapping("/booksCategory}")
-    public List<BookDto> getBookByCategory(@RequestParam Category category) {
-        return rentService.getBookByCategory(category);
+    @GetMapping("/booksCategory/{category}")
+    public List<BookDto> getBookByCategory(@PathVariable Category category) {
+        return bookService.getBookByCategory(category);
     }
-
-
-    @GetMapping("/bookByCategory/{categoryName}")
-    public List<BookDto> bookByCategory(@PathVariable String categoryName) {
-        return rentService.getBookByCategory(categoryName);
-    }
-
-*/
 
 }

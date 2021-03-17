@@ -1,21 +1,17 @@
 package com.example.library.service;
 
-
+import com.example.library.constants.Category;
 import com.example.library.dto.BookDto;
 import com.example.library.entity.Book;
-import com.example.library.entity.Rent;
-import com.example.library.entity.User;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.DuplicateResourceException;
 import com.example.library.repository.BookRepository;
-import com.example.library.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,16 +24,15 @@ public class BookService {
 
     final ModelMapper modelMapper = new ModelMapper();
 
-
     @Autowired
     BookRepository bookRepository;
-
 
     /**
      * Add new book into database
      *
      * @param bookDto
      */
+    @Transactional
     public void addNewBook(BookDto bookDto){
         Optional<Book> bookId = bookRepository.findById(bookDto.getId());
         if(bookId.isPresent()){
@@ -55,11 +50,11 @@ public class BookService {
      *
      * @param bookDto
      */
+    @Transactional
     public void addAllBooks(List<BookDto> bookDto){
         List<Book> book = Arrays.asList(modelMapper.map(bookDto, Book.class));
         bookRepository.saveAll(book);
     }
-
 
     /**
      * Get book by id
@@ -74,7 +69,6 @@ public class BookService {
         LOGGER.info("Book with id: " + id + " exists.");
 
         return modelMapper.map(book, BookDto.class);
-
     }
 
     /**
@@ -92,7 +86,7 @@ public class BookService {
      *
      * @param bookDto
      */
-
+    @Transactional
     public void updateBook (BookDto bookDto){
         Book book = modelMapper.map(bookDto, Book.class);
 
@@ -112,7 +106,6 @@ public class BookService {
      *
      * @param id
      */
-
     public void deleteBook(Long id){
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book with id:" + id + " is not found."));
@@ -122,26 +115,17 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-
     /**
      * Get the list of books according to category
      *
      * @param category
      * @return
      */
-    /*
     public List<BookDto> getBookByCategory(Category category) {
         LOGGER.info("Fetch all the books by category");
-        List<Book> book = bookRepository.findAllBookByCategory(category);
+        List<Book> book = bookRepository.findByCategory(category);
         return mapBookListToBooDtoList(book);
     }
-
-    public List<BookDto> getBookByCategory(String categoryName) {
-        LOGGER.info("Fetch all the books by category");
-        List<Book> book = bookRepository.findAllBookByCategoryName(categoryName);
-        return mapBookListToBooDtoList(book);
-    }
-*/
 
     //Convert List of books to List of bookDto
     private List<BookDto> mapBookListToBooDtoList(List<Book> books) {

@@ -31,4 +31,9 @@ public class UserDto {
      */
     private Integer borrowedBooksCount;
 
+    /**
+     * overdue date
+     */
+    private boolean isOverdue;
+
 }
