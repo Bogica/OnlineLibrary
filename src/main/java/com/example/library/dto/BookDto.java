@@ -54,4 +54,11 @@ public class BookDto {
     @Min(value = 0, message = "Total totalCount should be positive value.")
     private int totalCount;
 
+    /**
+     * total count of book rented
+     */
+    @ApiModelProperty(value="Copies of book available on the library")
+    @Min(value = 0, message = "Total rent should be positive value.")
+    private Integer rented;
+
 }

@@ -2,6 +2,7 @@ package com.example.library.controller;
 
 import com.example.library.constants.Category;
 import com.example.library.dto.BookDto;
+import com.example.library.entity.Book;
 import com.example.library.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +47,8 @@ public class BookController {
     @PostMapping("/addNewBook")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public void addNewBook(@Valid @RequestBody BookDto bookDto) {
-        bookService.addNewBook(bookDto);
+    public Book addNewBook(@Valid @RequestBody BookDto bookDto) {
+        return bookService.addNewBook(bookDto);
     }
 
     /**

@@ -24,8 +24,12 @@ public class BookService {
 
     final ModelMapper modelMapper = new ModelMapper();
 
+    private final BookRepository bookRepository;
+
     @Autowired
-    BookRepository bookRepository;
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     /**
      * Add new book into database
@@ -33,16 +37,17 @@ public class BookService {
      * @param bookDto
      */
     @Transactional
-    public void addNewBook(BookDto bookDto){
+    public Book addNewBook(BookDto bookDto){
         Optional<Book> bookId = bookRepository.findById(bookDto.getId());
         if(bookId.isPresent()){
             throw new DuplicateResourceException("Book with id: " + bookId + " already exists!");
         }
 
         LOGGER.info("No duplicate found");
+
         Book book = modelMapper.map(bookDto, Book.class);
 
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     /**
@@ -62,7 +67,7 @@ public class BookService {
      * @param id
      * @return bookdto
      */
-    public BookDto findBookById(Long id){
+    public BookDto findBookById(Long id) throws BookNotFoundException{
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book with id:" + id + " is not found."));
 

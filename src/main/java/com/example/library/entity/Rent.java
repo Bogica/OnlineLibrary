@@ -44,10 +44,13 @@ public class Rent {
     /**
      * object user, user who rents book
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)//load it on-demand
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    /**
+     * if date is overdue
+     */
     private boolean isOverdue;
 
 }

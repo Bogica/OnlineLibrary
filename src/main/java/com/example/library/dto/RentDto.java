@@ -52,7 +52,7 @@ public class RentDto {
     private LocalDate RentEnd;
 
     /**
-     * overdue date
+     * if date is overdue
      */
     private boolean isOverdue;
 

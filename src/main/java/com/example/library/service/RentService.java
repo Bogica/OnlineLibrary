@@ -36,14 +36,18 @@ public class RentService {
     public final int MAX_BOOKS_OF_NEW_CATEGORY = 2;
     public final int OVERDUE_DAYS = 30;
 
-    @Autowired
-    RentRepository rentRepository;
+    private final RentRepository rentRepository;
+
+    private final BookRepository bookRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    BookRepository bookRepository;
-
-    @Autowired
-    UserRepository userRepository;
+    public RentService(RentRepository rentRepository, BookRepository bookRepository, UserRepository userRepository) {
+        this.rentRepository = rentRepository;
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * Add new rent
